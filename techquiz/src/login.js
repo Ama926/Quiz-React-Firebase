@@ -1,52 +1,54 @@
 import React, { Component } from 'react';
 import fire from './config/fire';
 
-class login extends Component{
-    constructor(props){
-        super(props);
-        this.state={
-            email : "",
-            password: "",
-        }
-       
-        
-    }
+class login extends React.Component{
 
-    login(e){
-        e.preventDefault();
-        fire.auth().signInWithEmailAndPassword(this.state.email, this.state.password).then((u)=>{
-            console.log(u)
-        }).catch
+    login(){
+      const email = document.querySelector("#email").value;
+      const password = document.querySelector("#password").value;
+   
+       fire.auth().signInWithEmailAndPassword(email,password)
+        .then((u) => {
+            console.log("successufully logged in");
+        })
+        .catch((err) =>{
+            console.log("Error: "+err.toString());
+        })
     }
 
 
-handleChange(e){
-    this.setState({[e.target.name]: e.target.value});
-}
+    signup(){
+        const email = document.querySelector("#email").value;
+        const password = document.querySelector("#password").value;
+     
+         fire.auth().createUserWithEmailAndPassword(email,password)
+          .then((u) => {
+              console.log("successufully signed up");
+          })
+          .catch((err) =>{
+              console.log("Error: "+err.toString());
+          })
+    }
 
-render() {
-    return(
-        <div>
-            <form>
-                <input 
-                type="email"
-                id="email"
-                placeholder="Enter your e-mail address"
-                onChange={this.handleChange}
-                value={this.state.email}
-                />
-                <input 
-                type="password"
-                id="password"
-                placeholder="enter password"
-                value={this.state.password}
-                />
-                <button onClick={this.login}> Login </button>
-                <button onClick={this.state.signup}>Signup</button>
-            </form>
-        </div>
-    )
-}
+
+
+    render() {
+        return (
+          <div style={{ textAlign: 'center' }}>
+            <div>
+              <div>Email</div>
+              <input id="email" placeholder="Enter Email.." type="text"/>
+            </div>
+            <div>
+              <div>Password</div>
+              <input id="password" placeholder="Enter Password.." type="text"/>
+            </div>
+            <button style={{margin: '10px'}} onClick={this.login}>Login</button>
+            <button style={{margin: '10px'}} onClick={this.signup}>Sign Up</button>
+          </div>
+        )
+      }
+
 }
 
 export default login;

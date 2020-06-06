@@ -1,44 +1,48 @@
 import React, { Component } from 'react';
 import fire from './config/fire';
-import './App.css';
-import login from './login';
-import home from './home';
+
+import Login from './login.js';
+import Home from './home';
 
 class App extends Component
 {
   constructor(props){
     super(props);
-    this.state={
-      user:{}
+
+    this.state ={
+      user: null,
     }
+
+    this.authListener = this.authListener.bind(this);
   }
 
   componentDidMount(){
     this.authListener();
   }
-  
-  authListener(){
-    fire.auth().onAuthStateChange((user) => {
 
+  authListener(){
+    fire.auth().onAuthStateChanged((user) => {     //giving by firebase sdk
       if(user){
         this.setState({ user });
-
-
       }else{
         this.setState({ user: null });
-
       }
-   });
- }
+    })
+  }
 
-  
   render(){
     return(
       <div className="App">
-        {this.state.user ? (<home />) : (<login />)}
-        </div>
+      { this.state.user ? ( <Home /> ) : ( <Login /> ) }
+    </div>
     );
   }
 
 }
+
+ 
+ 
+
+  
+
 export default App;
