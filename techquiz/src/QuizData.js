@@ -15,22 +15,22 @@ export const QuizData = [
 
     {
         id: 2,
-        question: "What is the first private company's spacecraft which goes to the ISS(International Space Station) ",
+        question: "What is the first private company's spacecraft which went to the ISS(International Space Station) ",
         options: ['Crew Dragon', 'Discovery', 'Endeavour'],
         answer: 'Crew Dragon'
     },
 
     {
         id: 3,
-        question: "Longest river ",
-        options: ['Nile', 'Amazon','Misisipi'],
-        answer: 'Nile'
+        question: "The world most used browser is  ",
+        options: ['Firefox','Google Chrome','Safari'],
+        answer: 'Google Chrome'
     },
 
     {
         id: 0,
-        question: "Who is the CEO of Microsoft",
-        options: ['Bill Gates', 'Elon Musk', 'Steve Jobs'],
-        answer: 'Bill Gates'
+        question: "Who is the CEO of Google",
+        options: ['Bill Gates', 'Sundar Pichai', 'Steve Jobs'],
+        answer: 'Sundar Pichai'
     }
 ];

@@ -14,8 +14,10 @@ class login extends React.Component{
         .catch((err) =>{
             console.log("Error: "+err.toString());
         })
+
     }
 
+  
 
     signup(){
         const email = document.querySelector("#email").value;
@@ -28,6 +30,15 @@ class login extends React.Component{
           .catch((err) =>{
               console.log("Error: "+err.toString());
           })
+
+          
+        const db = fire.firestore();
+         db.collection("techQuiz").add({
+           username: email ,
+           password: password,
+           score: 0
+          
+       })
     }
 
 
@@ -35,16 +46,16 @@ class login extends React.Component{
     render() {
         return (
           <div style={{ textAlign: 'center' }}>
-            <div>
+            <div className="login">
               <div>Email</div>
-              <input id="email" placeholder="Enter Email.." type="text"/>
+              <div className ="ui input focus"><input id="email" placeholder="email" type="text"/></div>
             </div>
             <div>
               <div>Password</div>
-              <input id="password" placeholder="Enter Password.." type="text"/>
+              <div className ="ui input focus"><input id="password" placeholder="password" type="text"  /></div>
             </div>
-            <button style={{margin: '10px'}} onClick={this.login}>Login</button>
-            <button style={{margin: '10px'}} onClick={this.signup}>Sign Up</button>
+            <button style={{margin: '10px'}} onClick={this.login}   className = "ui inverted button">Login</button>
+            <button style={{margin: '10px'}} onClick={this.signup}   className = "ui inverted button">Sign Up</button>
           </div>
         )
       }

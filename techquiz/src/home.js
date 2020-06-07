@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import fire from './config/fire';
 import { QuizData } from './QuizData';
 
+//ama
 class home extends React.Component{
     state = {
         userAnswer: null,
@@ -10,35 +11,41 @@ class home extends React.Component{
         QuizEnd: false,
         score: 0,
         disabled: true
-    }
- 
+    };
+ //   const [newSpellName, setNewSpellName] = React.useState();
+
     logout(){
         fire.auth().signOut();
     }
 
+     refreshPage() {
+        window.location.reload(false);
+      }
+
     loadQuiz = () =>{
-        const {currentQuestion} = this.state;
+     //   const {currentQuestion} = this.state;
         this.setState(() => {
             return{
-                questions: QuizData[currentQuestion].question,
-                options: QuizData[currentQuestion].options,
-                answers: QuizData[currentQuestion].answer
+                questions: QuizData[this.state.currentQuestion].question,
+                options: QuizData[this.state.currentQuestion].options,
+                answers: QuizData[this.state.currentQuestion].answer
             };
         });
     };
 
 
     componentDidMount(){
-        this.loadQuiz();
+         this. loadQuiz();
         console.log("quiz load");
     }
 
+  
 
     //generate the next question
     nextQestionHandler = () => {
-        const {userAnswer, answer, score } = this.state;
+        const {userAnswer, answers, score } = this.state;
 
-        if(userAnswer === answer){
+        if(userAnswer === answers){
             this.setState({
                 score: score + 1
             });
@@ -52,15 +59,15 @@ class home extends React.Component{
 
     //update the component
     componentDidUpdate(prevProps, prevState){
-        const {currentQuestion } = this.state;
+        //const {currentQuestion } = this.state;
 
         if(this.state.currentQuestion !== prevState.currentQuestion)
         this.setState(() => {
             return{
                 disabled: true,
-                questions: QuizData[currentQuestion].question,
-                options: QuizData[currentQuestion].options,
-                answers: QuizData[currentQuestion].answer
+                questions: QuizData[this.state.currentQuestion].question,
+                options: QuizData[this.state.currentQuestion].options,
+                answers: QuizData[this.state.currentQuestion].answer
             };
         });
     }
@@ -72,27 +79,37 @@ class home extends React.Component{
     };
 
     finishHandler = () => {
-        const {userAnswer, answer, score} = this.state
+       // const {currentQuestion,userAnswer,  score} = this.state
 
-        if(this.setState.currentQuestion === QuizData.length - 1){
+        if(this.state.currentQuestion === QuizData.length - 1){
             this.setState ({
-                QuizEnd: true,
+                QuizEnd: true
                 
-            })
+            });
            // console.log("finish clicked");
         }
-        if (this.state.userAnswer === this.state.correctAnswer) {
+
+        if (this.state.userAnswer === this.state.answers) {
             this.setState({
               score: this.state.score + 1
             })
-            console.log("Current score: ",this.state.score)
+            //console.log("Current score: ",this.state.score)
 
           }
+
+          //update score of the user
+        /*  const db = fire.firestore();
+          var score = db.collection("techQuiz").doc();
+          return score.update({
+              score: score
+          })*/
+
+          //console.log("finish clicked");
     }
     
 
     render() {
-        const {questions, options,currentQuestion, userAnswer, QuizEnd} = this.state;
+        const {options, userAnswer, currentQuestion,QuizEnd,score } = this.state;
       
         if(QuizEnd){
             return (
@@ -109,14 +126,19 @@ class home extends React.Component{
                         ))}
                     </ul>
                     </p>
+                    <button onClick={this.logout} className = "ui inverted button">Logout</button>
+                    <button onClick={this.refreshPage} className = "ui inverted button">Try again</button>
+               
                 </div>
             );
+
         }else{
             return(
-                <div>
+                <div className="App">
                   <h1>You are logged in</h1>
+                 
                   <h1>{this.state.questions} </h1>
-                  <span>{`Questions ${currentQuestion}  out of ${QuizData.length - 1} remaining `}</span>
+                  <span>{`Questions ${currentQuestion+1}  out of ${QuizData.length}  `}</span>
                   { options.map(option =>(
                       <p
                       key={option.id}
@@ -147,8 +169,11 @@ class home extends React.Component{
                        // disabled = {this.state.disabled}
                          onClick = {this.finishHandler}
                         >Finish</button>
-                    ) }
-                  <button onClick={this.logout}>Logout</button>
+                     
+                    )} 
+                 
+                 <button onClick={this.logout} className = "ui inverted button">Logout</button>
+                   
                 </div>
                
             );
