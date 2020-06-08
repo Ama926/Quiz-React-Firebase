@@ -10,7 +10,8 @@ class home extends React.Component{
         options: [],
         QuizEnd: false,
         score: 0,
-        disabled: true
+        disabled: true,
+        userDetails: false,
     };
  //   const [newSpellName, setNewSpellName] = React.useState();
 
@@ -32,7 +33,37 @@ class home extends React.Component{
             };
         });
     };
+     
+    update = () => {
+        this.setState ({
+            userDetails: true
+        });
+       /* const db = fire.firestore();
+        const email = document.querySelector("#email").value;
+        const password = document.querySelector("#password").value;
 
+        var username = db.collection("techQuiz").doc();
+        var password = db.collection("techQuiz").doc();
+        return score.update({       
+            username: email,
+            password: password
+        });*/
+
+        const email = document.querySelector("#updateemail").value;
+        const password = document.querySelector("#updatepassword").value;
+        var user = fire.auth().currentUser;
+
+        user.updateProfile({
+        username:  email,
+        password: password,
+        }).then(function() {
+        // Update successful.
+         console.log("update successfully");
+        }).catch(function(error) {
+        // An error happened.
+        console.log(error);
+        });
+    }
 
     componentDidMount(){
          this. loadQuiz();
@@ -105,11 +136,25 @@ class home extends React.Component{
           })*/
 
           //console.log("finish clicked");
+
+          //const score = document.querySelector("#score").value;
+          const score = this.state.score;
+          var user = fire.auth().currentUser;
+  
+          user.updateProfile({
+          score: score
+          }).then(function() {
+          // Update successful.
+           console.log("update successfully");
+          }).catch(function(error) {
+          // An error happened.
+          console.log(error);
+          });
     }
     
 
     render() {
-        const {options, userAnswer, currentQuestion,QuizEnd,score } = this.state;
+        const {options, userAnswer, currentQuestion,QuizEnd,score, userDetails} = this.state;
       
         if(QuizEnd){
             return (
@@ -131,6 +176,27 @@ class home extends React.Component{
                
                 </div>
             );
+        }    
+
+            if(userDetails){
+                return(
+                    <div>
+                        <h1>User Details</h1>
+                        <h2>Here you can update your user details</h2>
+                        <div style={{ textAlign: 'center' }}>
+                            <div className="login">
+                            <div>Email</div>
+                            <div className ="ui input focus"><input id="updateemail" placeholder="update email" type="text"/></div>
+                            </div>
+                        <div>
+                            <div>Password</div>
+                            <div className ="ui input focus"><input id="updatepassword" placeholder="update password" type="password"  /></div>
+                        </div>
+                        <button style={{margin: '10px'}} onClick={this.update}   className = "ui inverted button">update</button>
+                    </div>
+                    </div>
+                );
+            
 
         }else{
             return(
@@ -173,6 +239,7 @@ class home extends React.Component{
                     )} 
                  
                  <button onClick={this.logout} className = "ui inverted button">Logout</button>
+                 <button onClick={this.update} className = "ui inverted button">Update Userdetails</button>
                    
                 </div>
                

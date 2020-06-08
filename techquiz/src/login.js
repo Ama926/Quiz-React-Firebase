@@ -52,7 +52,7 @@ class login extends React.Component{
             </div>
             <div>
               <div>Password</div>
-              <div className ="ui input focus"><input id="password" placeholder="password" type="text"  /></div>
+              <div className ="ui input focus"><input id="password" placeholder="password" type="password"  /></div>
             </div>
             <button style={{margin: '10px'}} onClick={this.login}   className = "ui inverted button">Login</button>
             <button style={{margin: '10px'}} onClick={this.signup}   className = "ui inverted button">Sign Up</button>
