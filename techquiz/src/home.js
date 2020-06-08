@@ -12,6 +12,7 @@ class home extends React.Component{
         score: 0,
         disabled: true,
         userDetails: false,
+        attempt: 1,
     };
  //   const [newSpellName, setNewSpellName] = React.useState();
 
@@ -19,8 +20,20 @@ class home extends React.Component{
         fire.auth().signOut();
     }
 
-     refreshPage() {
-        window.location.reload(false);
+     refreshPage = () => {
+       // window.location.reload(true);
+        const { attempt } = this.state;
+        if(attempt < 3){
+            this.setState({
+                attempt: attempt+1           
+            });
+            window.location.reload(true);
+            console.log(attempt);
+        }else{
+           // alert 'You have only 3 attempts for one logging session';
+           window.location.reload(false);
+           console.log("no more attempts");
+        }
       }
 
     loadQuiz = () =>{
