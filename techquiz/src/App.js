@@ -3,9 +3,12 @@ import fire from './config/fire';
 
 import Login from './login.js';
 import Home from './home';
+//import Quiz from "./quiz";
+//import Questions from "./quiz";
 
 class App extends Component
 {
+
   constructor(props){
     super(props);
 
@@ -30,19 +33,17 @@ class App extends Component
     })
   }
 
+  
+
   render(){
     return(
       <div className="App">
-      { this.state.user ? ( <Home /> ) : ( <Login /> ) }
+       { this.state.user ? ( <Home /> ) : ( <Login /> ) }
     </div>
     );
   }
 
 }
 
- 
- 
-
-  
 
 export default App;

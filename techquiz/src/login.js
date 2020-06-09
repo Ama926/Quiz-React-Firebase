@@ -6,6 +6,7 @@ class login extends React.Component{
     login(){
       const email = document.querySelector("#email").value;
       const password = document.querySelector("#password").value;
+      
    
        fire.auth().signInWithEmailAndPassword(email,password)
         .then((u) => {
@@ -15,6 +16,7 @@ class login extends React.Component{
             console.log("Error: "+err.toString());
         })
 
+    
     }
 
   
@@ -22,21 +24,36 @@ class login extends React.Component{
     signup(){
         const email = document.querySelector("#email").value;
         const password = document.querySelector("#password").value;
-     
+        //const  uid="";
+
          fire.auth().createUserWithEmailAndPassword(email,password)
           .then((u) => {
               console.log("successufully signed up");
           })
           .catch((err) =>{
               console.log("Error: "+err.toString());
+              
           })
 
-          
+          fire.auth().onAuthStateChanged((user) => {
+            if (user) {
+              // User logged in already or has just logged in.
+              console.log(user.uid);
+              // uid = user.id;
+             
+            } else {
+              // User not logged in or has just logged out.
+            }
+         
+        });
+
         const db = fire.firestore();
          db.collection("techQuiz").add({
            username: email ,
            password: password,
-           score: 0
+           score: 0,
+           //uid: user.id,
+           //uid: uid,
           
        })
     }

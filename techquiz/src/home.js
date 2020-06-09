@@ -123,38 +123,26 @@ class home extends React.Component{
     };
 
     finishHandler = () => {
-       // const {currentQuestion,userAnswer,  score} = this.state
 
         if(this.state.currentQuestion === QuizData.length - 1){
             this.setState ({
                 QuizEnd: true
                 
             });
-           // console.log("finish clicked");
         }
 
         if (this.state.userAnswer === this.state.answers) {
             this.setState({
               score: this.state.score + 1
             })
-            //console.log("Current score: ",this.state.score)
-
           }
 
-          //update score of the user
-        /*  const db = fire.firestore();
-          var score = db.collection("techQuiz").doc();
-          return score.update({
-              score: score
-          })*/
-
-          //console.log("finish clicked");
-
+     
           //const score = document.querySelector("#score").value;
-          const score = this.state.score;
-          var user = fire.auth().currentUser;
-  
-          user.updateProfile({
+         // const score = this.state.score;
+          //var user = fire.auth().currentUser;
+         // console.log(user);
+          /*user.updateProfile({
           score: score
           }).then(function() {
           // Update successful.
@@ -162,10 +150,25 @@ class home extends React.Component{
           }).catch(function(error) {
           // An error happened.
           console.log(error);
-          });
+          });*/
+
+          const db = fire.firestore();
+          var update = db.collection("techQuiz").doc();
+
+            return update.update({
+                score: this.state.score
+            })
+            .then(function() {
+               // console.log("Document successfully updated!");
+               console.log("updated");
+            })
+            .catch(function(error) {
+                // The document probably doesn't exist.
+                console.error("Error updating document: ", error);
+            });
+      
     }
     
-
     render() {
         const {options, userAnswer, currentQuestion,QuizEnd,score, userDetails} = this.state;
       
