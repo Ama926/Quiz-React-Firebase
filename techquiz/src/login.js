@@ -19,46 +19,23 @@ class login extends React.Component{
     
     }
 
-  
-
-    signup(){
-        const email = document.querySelector("#email").value;
-        const password = document.querySelector("#password").value;
-        //const  uid="";
-
-         fire.auth().createUserWithEmailAndPassword(email,password)
-          .then((u) => {
-              console.log("successufully signed up");
-          })
-          .catch((err) =>{
-              console.log("Error: "+err.toString());
-              
-          })
-
-          fire.auth().onAuthStateChanged((user) => {
-            if (user) {
-              // User logged in already or has just logged in.
-              console.log(user.uid);
-              // uid = user.id;
-             
-            } else {
-              // User not logged in or has just logged out.
-            }
-         
-        });
-
+    async signup() {
+      const email = document.querySelector("#email").value;
+      const password = document.querySelector("#password").value;
+      try {
+        const { user } = await fire
+          .auth()
+          .createUserWithEmailAndPassword(email, password);
         const db = fire.firestore();
-         db.collection("techQuiz").add({
-           username: email ,
-           password: password,
-           score: 0,
-           //uid: user.id,
-           //uid: uid,
-          
-       })
+        await db.collection("users").add({
+          userId: user.uid,
+          email: user.email,
+          attempts: [],
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
-
-
 
     render() {
         return (

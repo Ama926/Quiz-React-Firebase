@@ -22,17 +22,19 @@ class home extends React.Component{
 
      refreshPage = () => {
        // window.location.reload(true);
-        const { attempt } = this.state;
-        if(attempt < 3){
+        const { attempt } = this.state.attempt;
+        if(attempt > 3){
             this.setState({
-                attempt: attempt+1           
+                attempt: attempt+1  ,         
             });
+            window.location.reload(false);
+            //this.setState ({ disabled: false });
+             console.log("no more attempts");
+        
+        }else{
             window.location.reload(true);
             console.log(attempt);
-        }else{
-           // alert 'You have only 3 attempts for one logging session';
-           window.location.reload(false);
-           console.log("no more attempts");
+       
         }
       }
 
@@ -51,16 +53,6 @@ class home extends React.Component{
         this.setState ({
             userDetails: true
         });
-       /* const db = fire.firestore();
-        const email = document.querySelector("#email").value;
-        const password = document.querySelector("#password").value;
-
-        var username = db.collection("techQuiz").doc();
-        var password = db.collection("techQuiz").doc();
-        return score.update({       
-            username: email,
-            password: password
-        });*/
 
         const email = document.querySelector("#updateemail").value;
         const password = document.querySelector("#updatepassword").value;
@@ -78,12 +70,21 @@ class home extends React.Component{
         });
     }
 
+   /* gotData = () => {
+        const db = fire.firestore();
+        var ref = db.ref('techQuiz');
+      //  ref.on('value', gotData, errData);
+
+      // console.log(data.val());
+      var scores = data.val();
+      var keys = Object.keys(scores);
+      console.log(keys);
+    }*/
+
     componentDidMount(){
          this. loadQuiz();
         console.log("quiz load");
     }
-
-  
 
     //generate the next question
     nextQestionHandler = () => {
@@ -122,52 +123,40 @@ class home extends React.Component{
 
     };
 
-    finishHandler = () => {
-
-        if(this.state.currentQuestion === QuizData.length - 1){
-            this.setState ({
-                QuizEnd: true
-                
-            });
+    finishHandler = async () => {
+        if (this.state.currentQuestion === QuizData.length - 1) {
+          this.setState({
+            QuizEnd: true,
+           
+          });
         }
-
         if (this.state.userAnswer === this.state.answers) {
-            this.setState({
-              score: this.state.score + 1
-            })
-          }
-
-     
-          //const score = document.querySelector("#score").value;
-         // const score = this.state.score;
-          //var user = fire.auth().currentUser;
-         // console.log(user);
-          /*user.updateProfile({
-          score: score
-          }).then(function() {
-          // Update successful.
-           console.log("update successfully");
-          }).catch(function(error) {
-          // An error happened.
-          console.log(error);
-          });*/
-
+          this.setState({
+            score: this.state.score + 1,
+          });
+        }
+        try {
+          const user = fire.auth().currentUser;
           const db = fire.firestore();
-          var update = db.collection("techQuiz").doc();
-
-            return update.update({
-                score: this.state.score
-            })
-            .then(function() {
-               // console.log("Document successfully updated!");
-               console.log("updated");
-            })
-            .catch(function(error) {
-                // The document probably doesn't exist.
-                console.error("Error updating document: ", error);
+          let usersRef = await db.collection("users");
+          let { docs } = await usersRef
+            .where("userId", "==", user.uid)
+            .limit(1)
+            .get();
+          const { attempts } = docs[0].data();
+          await db
+            .collection("users")
+            .doc(docs[0].id)
+            .update({
+              attempts: [
+                ...attempts,
+                { attemptedAt: new Date().getTime(), score: this.state.score },
+              ],
             });
-      
-    }
+        } catch (error) {
+          console.log(error);
+        }
+      };
     
     render() {
         const {options, userAnswer, currentQuestion,QuizEnd,score, userDetails} = this.state;
@@ -189,6 +178,7 @@ class home extends React.Component{
                     </p>
                     <button onClick={this.logout} className = "ui inverted button">Logout</button>
                     <button onClick={this.refreshPage} className = "ui inverted button">Try again</button>
+                    <button onClick={this.gotData} className = "ui inverted button">View My Score</button>
                
                 </div>
             );
